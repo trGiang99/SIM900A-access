@@ -45,12 +45,12 @@ class SerialAdapter(AdapterBase):
     
     def readline(self):
         data = self.__port.readline()
-        logger.debug('<' + data.decode())
+        logger.debug('<<' + data.decode("ISO-8859-1"))
         return data
 
     def write(self, data):
         assert isinstance(data, bytes)
-        logger.debug('>' + data.decode())
+        logger.debug('>>' + data.decode("ISO-8859-1"))
         self.__port.write(data)
 
     def available(self):

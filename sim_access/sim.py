@@ -181,8 +181,7 @@ class SIMModuleBase(object):
         msgs = []
         while done == False and counter < 3:
             line = self.__adapter.readline()
-            line = line.decode()
-            logger.debug(line)
+            line = line.decode("ISO-8859-1")
             msgs.append(line)
             if line == 'OK\r\n':
                 done = True
@@ -197,13 +196,15 @@ class SIMModuleBase(object):
 
     @abstractmethod
     def on_sms(self, number, content):
-        ''' This is called when we received an sms message
+        '''
+        This is called when we received an sms message
         '''
         raise NotImplementedError()
 
     @abstractmethod
     def on_call(self, number):
-        ''' This is called when we received a phone call
+        ''' 
+        This is called when we received a phone call
         '''
         raise NotImplementedError()
 
@@ -216,7 +217,8 @@ class SIMModuleBase(object):
         raise NotImplementedError()
 
     def sms_send(self, number, text):
-        ''' send text to a destination number
+        ''' 
+        Send text to a destination number
         '''
         cmd = ATCommands.sms_send(number, text)
         for i in cmd:
@@ -224,21 +226,24 @@ class SIMModuleBase(object):
             time.sleep(1)
 
     def call_answer(self):
-        ''' answer current phone call
+        ''' 
+        Answer current phone call
         '''
         tmp = ATCommands.call_answer()
         self.__adapter.write(tmp.encode())
         self.__wait_ok()
 
     def call_hangup(self):
-        ''' hangup current phone call
+        ''' 
+        Hangup current phone call
         '''
         tmp = ATCommands.call_hangup()
         self.__adapter.write(tmp.encode())
         self.__wait_ok()
 
     def module_checkready(self):
-        ''' check if module is ready
+        ''' 
+        Check if module is ready
         '''
         tmp = ATCommands.module_checkready()
         self.__adapter.write(tmp.encode())
@@ -249,14 +254,16 @@ class SIMModuleBase(object):
         return False
 
     def module_poweroff(self):
-        ''' reset sim module
+        ''' 
+        Reset sim module
         '''
         tmp = ATCommands.module_poweroff()
         self.__adapter.write(tmp.encode())
         self.__wait_ok()
 
     def gps_location_date_time(self, apn):
-        ''' get gps location date and time
+        ''' 
+        Get gps location date and time
         '''
         tmp = ATCommands.module_sapbr('3,1,"CONTYPE","GPRS"')
         self.__adapter.write(tmp.encode())
@@ -284,14 +291,16 @@ class SIMModuleBase(object):
         return ((vlongitude, vlatitude), vdate, vtime)
 
     def network_setapn(self, apn):
-        ''' set up APN for network access
+        ''' 
+        Set up APN for network access
         '''
         tmp = ATCommands.network_setapn(apn)
         self.__adapter.write(tmp.encode())
         self.__wait_ok()
 
     def network_attach(self):
-        ''' attach up network
+        ''' 
+        Attach up network
         '''
         tmp = ATCommands.network_attach()
         self.__adapter.write(tmp.encode())
@@ -299,7 +308,8 @@ class SIMModuleBase(object):
         time.sleep(2)
 
     def network_bringup(self):
-        ''' bring up network
+        ''' 
+        Bring up network
         '''
         tmp = ATCommands.network_bringup()
         self.__adapter.write(tmp.encode())
@@ -307,19 +317,21 @@ class SIMModuleBase(object):
         self.__network_up = True
 
     def network_ipaddr(self):
-        ''' get local ip address
+        ''' 
+        Get local ip address
         '''
         tmp = ATCommands.network_ipaddr()
         self.__adapter.write(tmp.encode())
         tmp = '\r\n'
         while tmp == '\r\n':
             tmp = self.__adapter.readline()
-            tmp = tmp.decode()
+            tmp = tmp.decode("ISO-8859-1")
         return tmp
 
     def mainloop(self, detached=False):
-        ''' Currently we are doing nothing here except
-            joining the thread
+        ''' 
+        Currently we are doing nothing here except
+        joining the thread
         '''
         self.__monitorthread = threading.Thread(target=self.__monitor_loop)
         self.__monitorthread.start()
@@ -331,7 +343,8 @@ class SIMModuleBase(object):
                 os._exit(0)
 
     def loop_once(self):
-        ''' This is doing the same as mainloop, but just once
+        ''' 
+        This is doing the same as mainloop, but just once
         '''
         self.__loop_task()
 
@@ -392,7 +405,8 @@ class SIMModuleBase(object):
             self.on_call(number)
 
     def __call_process_missed(self, line):
-        ''' process missed call, something like:
+        ''' 
+        Process missed call, something like:
             MISSED_CALL: 00:20AM 02132523094
         '''
         number = line.split(':').split()[-1]
@@ -401,7 +415,7 @@ class SIMModuleBase(object):
     def __loop_task(self):
         try:
             line = self.__adapter.readline()
-            line = line.decode()
+            line = line.decode("ISO-8859-1")
             self.__process_data(line)
         except Exception as e:
             logger.error(str(e))
