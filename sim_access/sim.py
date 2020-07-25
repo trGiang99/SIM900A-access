@@ -109,7 +109,7 @@ class ATCommands(object):
     @classmethod
     def network_bringup(cls):
         return atcmd('CIICR', True) + '\r\n'
-    
+
     @classmethod
     def network_ipaddr(cls):
         return atcmd('CIFSR', True) + '\r\n'
@@ -117,7 +117,7 @@ class ATCommands(object):
     @classmethod
     def sms_fetch(cls, index):
         return atset('CMGR', True) + '{0}\r\n'.format(index)
-    
+
     @classmethod
     def sms_unread(cls):
         return atset('CMGL', True) + '"REC UNREAD"\r\n'
@@ -136,7 +136,7 @@ class ATCommands(object):
         return atset('CMGD', True) + '1,3\r\n'
 
 
-'''TODO: we need to follow https://wiki.keyestudio.com/Ks0287_keyestudio_SIM5320E_3G_Module_(Black)
+'''TODO: Follow https://wiki.keyestudio.com/Ks0287_keyestudio_SIM5320E_3G_Module_(Black)
     to finish all the actions
 '''
 @six.add_metaclass(ABCMeta)
@@ -203,7 +203,7 @@ class SIMModuleBase(object):
 
     @abstractmethod
     def on_call(self, number):
-        ''' 
+        '''
         This is called when we received a phone call
         '''
         raise NotImplementedError()
@@ -217,7 +217,7 @@ class SIMModuleBase(object):
         raise NotImplementedError()
 
     def sms_send(self, number, text):
-        ''' 
+        '''
         Send text to a destination number
         '''
         cmd = ATCommands.sms_send(number, text)
@@ -226,7 +226,7 @@ class SIMModuleBase(object):
             time.sleep(1)
 
     def call_answer(self):
-        ''' 
+        '''
         Answer current phone call
         '''
         tmp = ATCommands.call_answer()
@@ -234,7 +234,7 @@ class SIMModuleBase(object):
         self.__wait_ok()
 
     def call_hangup(self):
-        ''' 
+        '''
         Hangup current phone call
         '''
         tmp = ATCommands.call_hangup()
@@ -242,7 +242,7 @@ class SIMModuleBase(object):
         self.__wait_ok()
 
     def module_checkready(self):
-        ''' 
+        '''
         Check if module is ready
         '''
         tmp = ATCommands.module_checkready()
@@ -254,7 +254,7 @@ class SIMModuleBase(object):
         return False
 
     def module_poweroff(self):
-        ''' 
+        '''
         Reset sim module
         '''
         tmp = ATCommands.module_poweroff()
@@ -262,7 +262,7 @@ class SIMModuleBase(object):
         self.__wait_ok()
 
     def gps_location_date_time(self, apn):
-        ''' 
+        '''
         Get gps location date and time
         '''
         tmp = ATCommands.module_sapbr('3,1,"CONTYPE","GPRS"')
@@ -291,7 +291,7 @@ class SIMModuleBase(object):
         return ((vlongitude, vlatitude), vdate, vtime)
 
     def network_setapn(self, apn):
-        ''' 
+        '''
         Set up APN for network access
         '''
         tmp = ATCommands.network_setapn(apn)
@@ -299,7 +299,7 @@ class SIMModuleBase(object):
         self.__wait_ok()
 
     def network_attach(self):
-        ''' 
+        '''
         Attach up network
         '''
         tmp = ATCommands.network_attach()
@@ -308,7 +308,7 @@ class SIMModuleBase(object):
         time.sleep(2)
 
     def network_bringup(self):
-        ''' 
+        '''
         Bring up network
         '''
         tmp = ATCommands.network_bringup()
@@ -317,7 +317,7 @@ class SIMModuleBase(object):
         self.__network_up = True
 
     def network_ipaddr(self):
-        ''' 
+        '''
         Get local ip address
         '''
         tmp = ATCommands.network_ipaddr()
@@ -329,7 +329,7 @@ class SIMModuleBase(object):
         return tmp
 
     def mainloop(self, detached=False):
-        ''' 
+        '''
         Currently we are doing nothing here except
         joining the thread
         '''
@@ -343,7 +343,7 @@ class SIMModuleBase(object):
                 os._exit(0)
 
     def loop_once(self):
-        ''' 
+        '''
         This is doing the same as mainloop, but just once
         '''
         self.__loop_task()
@@ -405,7 +405,7 @@ class SIMModuleBase(object):
             self.on_call(number)
 
     def __call_process_missed(self, line):
-        ''' 
+        '''
         Process missed call, something like:
             MISSED_CALL: 00:20AM 02132523094
         '''
